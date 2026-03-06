@@ -177,11 +177,43 @@
     .nav-hire:hover { opacity: .88; transform: translateY(-2px) !important; }
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
-      background: none; border: none; cursor: pointer; padding: 6px;
+      background: none; border: none; cursor: pointer; padding: 10px;
+      z-index: 1002; position: relative;
     }
     .hamburger span {
-      display: block; width: 22px; height: 2px;
+      display: block; width: 24px; height: 2px;
       background: var(--ink); border-radius: 2px; transition: .3s;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex !important; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        background: var(--white);
+        padding: 16px 24px 28px;
+        border-bottom: 1px solid rgba(37,99,235,.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,.12);
+        gap: 0;
+        z-index: 1001;
+      }
+      .nav-links.open { display: flex !important; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        font-size: 1rem; padding: 13px 0; width: 100%;
+        display: block; border-bottom: 1px solid rgba(37,99,235,.06);
+        color: var(--ink) !important;
+      }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-hire {
+        margin-top: 8px; text-align: center !important;
+        border-radius: 10px !important; display: block !important;
+        padding: 12px 22px !important;
+      }
     }
 
     /* HERO */
@@ -419,29 +451,6 @@
     }
     @media (max-width: 640px) {
       section { padding: 68px 0; }
-      .nav-links {
-        display: none; flex-direction: column; align-items: flex-start;
-        position: fixed; top: var(--nav-h); left: 0; right: 0;
-        background: var(--white); padding: 20px 24px 28px;
-        border-bottom: 1px solid rgba(37,99,235,.1);
-        box-shadow: var(--shadow-md); gap: 2px;
-        z-index: 998;
-        max-height: calc(100vh - var(--nav-h));
-        overflow-y: auto;
-      }
-      .nav-links.open { display: flex !important; }
-      .nav-links li { width: 100%; }
-      .nav-links a {
-        font-size: .98rem; padding: 12px 0; width: 100%;
-        display: block; border-bottom: 1px solid rgba(37,99,235,.06);
-      }
-      .nav-links li:last-child a { border-bottom: none; }
-      .nav-hire {
-        display: block; text-align: center;
-        margin-top: 8px; padding: 12px 22px !important;
-        border-radius: 10px !important;
-      }
-      .hamburger { display: flex; z-index: 1001; position: relative; }
       .port-grid { grid-template-columns: 1fr; }
       .testi-grid { grid-template-columns: 1fr; }
       .services-grid { grid-template-columns: 1fr; }
@@ -814,30 +823,28 @@
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
 
   const ham = document.getElementById('hamburger');
-  const links = document.getElementById('navLinks');
+  const navLinks = document.getElementById('navLinks');
 
-  function toggleMenu(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const isOpen = links.classList.toggle('open');
-    ham.setAttribute('aria-expanded', String(isOpen));
-  }
+  ham.addEventListener('click', function() {
+    if (navLinks.classList.contains('open')) {
+      navLinks.classList.remove('open');
+      ham.setAttribute('aria-expanded', 'false');
+    } else {
+      navLinks.classList.add('open');
+      ham.setAttribute('aria-expanded', 'true');
+    }
+  });
 
-  ham.addEventListener('click', toggleMenu);
-  ham.addEventListener('touchstart', toggleMenu, { passive: false });
-
-  // Close menu when any nav link is clicked
-  links.querySelectorAll('a').forEach(a => {
+  navLinks.querySelectorAll('a').forEach(function(a) {
     a.addEventListener('click', function() {
-      links.classList.remove('open');
+      navLinks.classList.remove('open');
       ham.setAttribute('aria-expanded', 'false');
     });
   });
 
-  // Close menu when clicking outside
   document.addEventListener('click', function(e) {
-    if (!links.contains(e.target) && !ham.contains(e.target)) {
-      links.classList.remove('open');
+    if (!navLinks.contains(e.target) && !ham.contains(e.target)) {
+      navLinks.classList.remove('open');
       ham.setAttribute('aria-expanded', 'false');
     }
   });
