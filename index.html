@@ -465,7 +465,7 @@
 <nav id="navbar" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="#hero" class="nav-logo">Ucchas<span>.</span></a>
-    <ul class="nav-links" id="navLinks">
+    <ul class="nav-links" id="navLinks" style="display:none;">
       <li><a href="#hero">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
@@ -819,32 +819,71 @@
 </footer>
 
 <script>
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+  var navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', function() {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
 
-  const ham = document.getElementById('hamburger');
-  const navLinks = document.getElementById('navLinks');
+  var ham = document.getElementById('hamburger');
+  var navMenu = document.getElementById('navLinks');
+  var menuOpen = false;
 
-  ham.addEventListener('click', function() {
-    if (navLinks.classList.contains('open')) {
-      navLinks.classList.remove('open');
-      ham.setAttribute('aria-expanded', 'false');
+  // On desktop, always show nav
+  function handleResize() {
+    if (window.innerWidth > 768) {
+      navMenu.style.display = 'flex';
+      navMenu.style.flexDirection = 'row';
+      navMenu.style.position = 'static';
+      navMenu.style.background = 'transparent';
+      navMenu.style.boxShadow = 'none';
+      navMenu.style.padding = '0';
+      menuOpen = false;
     } else {
-      navLinks.classList.add('open');
+      if (!menuOpen) {
+        navMenu.style.display = 'none';
+      }
+    }
+  }
+
+  window.addEventListener('resize', handleResize);
+  handleResize();
+
+  ham.addEventListener('click', function(e) {
+    e.stopPropagation();
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      navMenu.style.display = 'flex';
+      navMenu.style.flexDirection = 'column';
+      navMenu.style.position = 'fixed';
+      navMenu.style.top = '70px';
+      navMenu.style.left = '0';
+      navMenu.style.right = '0';
+      navMenu.style.background = '#fff';
+      navMenu.style.padding = '16px 24px 28px';
+      navMenu.style.boxShadow = '0 8px 32px rgba(0,0,0,0.15)';
+      navMenu.style.zIndex = '1001';
+      navMenu.style.gap = '0';
       ham.setAttribute('aria-expanded', 'true');
+    } else {
+      navMenu.style.display = 'none';
+      ham.setAttribute('aria-expanded', 'false');
     }
   });
 
-  navLinks.querySelectorAll('a').forEach(function(a) {
+  navMenu.querySelectorAll('a').forEach(function(a) {
     a.addEventListener('click', function() {
-      navLinks.classList.remove('open');
-      ham.setAttribute('aria-expanded', 'false');
+      if (window.innerWidth <= 768) {
+        menuOpen = false;
+        navMenu.style.display = 'none';
+        ham.setAttribute('aria-expanded', 'false');
+      }
     });
   });
 
   document.addEventListener('click', function(e) {
-    if (!navLinks.contains(e.target) && !ham.contains(e.target)) {
-      navLinks.classList.remove('open');
+    if (window.innerWidth <= 768 && menuOpen && !navMenu.contains(e.target) && !ham.contains(e.target)) {
+      menuOpen = false;
+      navMenu.style.display = 'none';
       ham.setAttribute('aria-expanded', 'false');
     }
   });
