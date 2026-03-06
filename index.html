@@ -429,7 +429,7 @@
         max-height: calc(100vh - var(--nav-h));
         overflow-y: auto;
       }
-      .nav-links.open { display: flex; }
+      .nav-links.open { display: flex !important; }
       .nav-links li { width: 100%; }
       .nav-links a {
         font-size: .98rem; padding: 12px 0; width: 100%;
@@ -816,12 +816,15 @@
   const ham = document.getElementById('hamburger');
   const links = document.getElementById('navLinks');
 
-  // Toggle menu on hamburger click
-  ham.addEventListener('click', function(e) {
+  function toggleMenu(e) {
+    e.preventDefault();
     e.stopPropagation();
-    const open = links.classList.toggle('open');
-    ham.setAttribute('aria-expanded', String(open));
-  });
+    const isOpen = links.classList.toggle('open');
+    ham.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  ham.addEventListener('click', toggleMenu);
+  ham.addEventListener('touchstart', toggleMenu, { passive: false });
 
   // Close menu when any nav link is clicked
   links.querySelectorAll('a').forEach(a => {
