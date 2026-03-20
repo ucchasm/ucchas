@@ -571,7 +571,7 @@ Ucchas web developer. Uccash portfolio website.
 <nav id="navbar" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="/" class="nav-logo">Ucchas<span>.</span></a>
-    <label for="nav-toggle" class="hamburger" aria-label="Toggle menu">
+    <label for="nav-toggle" class="hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </label>
     <input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
@@ -1566,7 +1566,7 @@ Ucchas Mistry is a professional Social Media Manager, Facebook Ads Specialist, I
         <a href="#testimonials">Testimonials</a>
         <a href="#contact">Contact</a>
       </nav>
-      <p class="footer-copy">&copy;  2026 Ucchas Mistry. Crafted with purpose.</p>
+      <p class="footer-copy">&copy; 2026 Ucchas Mistry (Uccash Mistry). All Rights Reserved.</p>
       <p style="font-size:.72rem;color:rgba(255,255,255,.3);margin-top:6px;">Ucchas Mistry &bull; Uccash Mistry &bull; Social Media Manager &bull; Facebook Ads Specialist &bull; Instagram Marketing Expert &bull; Web Developer</p>
     </div>
   </div>
@@ -1579,21 +1579,13 @@ Ucchas Mistry is a professional Social Media Manager, Facebook Ads Specialist, I
     if (window.scrollY > 20) { nb.classList.add('scrolled'); } else { nb.classList.remove('scrolled'); }
   });
 
-  // Hamburger menu - simplest possible
-  document.getElementById('hamburger').addEventListener('click', function() {
-    var menu = document.getElementById('navLinks');
-    if (menu.classList.contains('open')) {
-      menu.classList.remove('open');
-    } else {
-      menu.classList.add('open');
-    }
-  });
-
-  // Close on link click
-  var navItems = document.getElementById('navLinks').querySelectorAll('a');
+  // Hamburger - CSS checkbox hack (no JS needed for toggle)
+  // Close menu when nav link clicked on mobile
+  var navItems = document.getElementById('navLinks') ? document.getElementById('navLinks').querySelectorAll('a') : [];
   for (var i = 0; i < navItems.length; i++) {
     navItems[i].addEventListener('click', function() {
-      document.getElementById('navLinks').classList.remove('open');
+      var toggle = document.getElementById('nav-toggle');
+      if (toggle) toggle.checked = false;
     });
   }
 
